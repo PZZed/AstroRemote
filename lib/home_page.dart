@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:astroremote/remote_page.dart';
 import 'package:flutter/material.dart';
 
@@ -108,13 +110,25 @@ class CustomSlider extends StatefulWidget {
 }
 
 class _CustomSlider extends State<CustomSlider> {
+  double value = 0;
   @override
   Widget build(BuildContext context) {
-    return Slider(
-      activeColor: Colors.redAccent[700],
-      inactiveColor: Colors.redAccent[300],
-      value: 0,
-      onChanged: (double value) {},
-    );
+    return Center(
+        child: Column(children: [
+      Text(value.toString()),
+      Slider(
+        activeColor: Colors.redAccent[700],
+        inactiveColor: Colors.redAccent[300],
+        value: value,
+        max: 1023,
+        divisions: 1023,
+        onChanged: (double value) {
+          setState(() {
+            this.value = value;
+            print(this.value);
+          });
+        },
+      )
+    ]));
   }
 }
