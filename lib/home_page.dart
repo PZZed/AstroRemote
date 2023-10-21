@@ -6,13 +6,25 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
   // final info = NetworkInfo();
-
+  Icon getActualStatus(){
+    //call checkHealth service
+    bool isConnected = true;
+    if(isConnected){
+      return Icon(Icons.check_circle_rounded,color: Colors.green);
+    }
+    return Icon(Icons.close_rounded,color: Colors.red);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
-        title: const Text("Accueil"),
-      ),
+        title: Text("Astronomande"),
+        actions: <Widget>[
+          IconButton(
+            icon: getActualStatus(),
+            onPressed: () {},
+        ) ]),
       body: Center(
           child: Column(
         children: [
@@ -110,25 +122,44 @@ class CustomSlider extends StatefulWidget {
 }
 
 class _CustomSlider extends State<CustomSlider> {
-  double value = 0;
+  double current_value = 500;
+  double maxValue = 1023;
+  final inputTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    inputTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(children: [
-      Text(value.toString()),
-      Slider(
-        activeColor: Colors.redAccent[700],
-        inactiveColor: Colors.redAccent[300],
-        value: value,
-        max: 1023,
-        divisions: 1023,
-        onChanged: (double value) {
-          setState(() {
-            this.value = value;
-            print(this.value);
-          });
-        },
-      )
-    ]));
+
+    Slider slider = Slider(
+          activeColor: Colors.redAccent[700],
+          inactiveColor: Color.fromARGB(136, 156, 152, 152),
+          value: current_value,
+          max: maxValue,
+          onChanged: (double value) {setState(() { current_value = value; });},
+    );
+
+    TextFormField textInput = TextFormField( 
+            onChanged:(value){ setState(() {if(0 <= double.parse(value) && double.parse(value) <= maxValue){current_value = double.parse(value); }});},
+            controller: inputTextController, 
+            decoration: InputDecoration( border: OutlineInputBorder(), hintText: current_value.round().toString()) );
+
+    return Column( 
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(
+          width: 100,
+          child: textInput), ElevatedButton(onPressed: () { return null; }, child: Text("Adapt speed"),)],)
+        ,
+        slider
+      ]);
+      
   }
 }
+
+
