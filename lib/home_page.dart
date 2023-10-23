@@ -17,6 +17,9 @@ class HomePage extends StatelessWidget {
     return Icon(Icons.close_rounded,color: Colors.red);
   }
 
+  SizedBox verticalSpace = SizedBox(height: 15);
+  SizedBox horizontalSpace = SizedBox(width: 5);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +34,7 @@ class HomePage extends StatelessWidget {
       body: Center(
           child: Column(
         children: [
-          TextButton(
+          /*TextButton(
               onPressed: () async {
                 try {
                   //  final wifiIP = await info.getWifiGatewayIP();
@@ -48,10 +51,16 @@ class HomePage extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => RemotePage()));
             },
-          ),
-          CustomSwitchWidget(),
-          CustomSwitchWidget(),
-          CustomSwitchWidget(),
+          ),*/
+          verticalSpace,
+          ElevatedButton(
+            onPressed: () { return null; /*TODO: call adapt speed service*/},
+            child: Text("Retour"),
+            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),),
+            verticalSpace,
+          CustomSwitchWidget("Suivi"),
+          CustomSwitchWidget("Suivi STD"),
+           
           CustomSlider()
         ],
       )),

@@ -43,9 +43,12 @@ class _CustomSlider extends State<CustomSlider> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(
-          width: 100,
-          child: textInput), 
-          ElevatedButton(onPressed: () { return null; /*TODO: call adapt speed service*/}, child: Text("Adapt speed"),)],)
+          width: 60,
+          child: textInput),SizedBox(width: 5), 
+          ElevatedButton(
+            onPressed: () { return null; /*TODO: call adapt speed service*/},
+            child: Text("Adapt speed"),
+            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),)],)
         ,
         slider
       ]);

@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CustomSwitchWidget extends StatefulWidget {
+  
+  String name;
+
+  CustomSwitchWidget(this.name); //constructor
+
   @override
-  _CustomSwitch createState() => _CustomSwitch();
+  _CustomSwitch createState() => _CustomSwitch(name);
 }
 
 class _CustomSwitch extends State<CustomSwitchWidget> {
+  String name;
+  _CustomSwitch(this.name); //constructor
+
   bool light = true;
+
+ 
   @override
   Widget build(BuildContext context) {
     final MaterialStateProperty<Color?> trackColor =
@@ -39,19 +49,20 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
         return null;
       },
     );
-
-    return Switch(
-      // This bool value toggles the switch.
-      value: light,
-      overlayColor: overlayColor,
-      trackColor: trackColor,
-      thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
-      onChanged: (bool value) {
-        // This is called when the user toggles the switch.
-        setState(() {
-          light = value;
-        });
+    return Column(
+      mainAxisAlignment:MainAxisAlignment.center,
+      children: [
+        Text(name), 
+        Switch(
+          // This bool value toggles the switch.
+          value: light,
+          overlayColor: overlayColor,
+          trackColor: trackColor,
+          thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
+          onChanged: (bool value) {setState(() {light = value; /*TODO : call switch service*/});
       },
-    );
+    ),
+    SizedBox(width: 5)]);
+    
   }
 }
