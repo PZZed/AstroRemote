@@ -46,7 +46,7 @@ class _CustomSlider extends State<CustomSlider> {
           width: 60,
           child: textInput),SizedBox(width: 5), 
           ElevatedButton(
-            onPressed: () { return null; /*TODO: call adapt speed service*/},
+            onPressed: null /*TODO: call adapt speed service, if "suivi activated,else return null to desactivate button"*/,
             child: Text("Adapt speed"),
             style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),)],)
         ,

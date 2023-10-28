@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:astroremote/customSlider.dart';
 import 'package:astroremote/customSwitch.dart';
 import 'package:astroremote/remote_page.dart';
@@ -17,7 +15,7 @@ class HomePage extends StatelessWidget {
     return Icon(Icons.close_rounded,color: Colors.red);
   }
 
-  SizedBox verticalSpace = SizedBox(height: 15);
+  SizedBox verticalSpace = SizedBox(height: 10);
   SizedBox horizontalSpace = SizedBox(width: 5);
 
   @override
@@ -53,14 +51,12 @@ class HomePage extends StatelessWidget {
             },
           ),*/
           verticalSpace,
-          ElevatedButton(
-            onPressed: () { return null; /*TODO: call adapt speed service*/},
-            child: Text("Retour"),
-            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),),
-            verticalSpace,
-          CustomSwitchWidget("Suivi"),
-          CustomSwitchWidget("Suivi STD"),
-           
+          CustomSwitchWidget("Suivi", true),
+          verticalSpace,
+          CustomSwitchWidget("Suivi STD", false),
+          verticalSpace,
+          CustomSwitchWidget("Retour", true),
+           verticalSpace,
           CustomSlider()
         ],
       )),
