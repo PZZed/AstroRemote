@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:astroremote/remote_page.dart';
 import 'package:flutter/material.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
   // final info = NetworkInfo();
 
   @override
@@ -19,8 +18,11 @@ class HomePage extends StatelessWidget {
           TextButton(
               onPressed: () async {
                 try {
-                  //  final wifiIP = await info.getWifiGatewayIP();
-                  //  print(wifiIP.toString());
+                  final info = (NetworkInfo());
+                  print(await (info.getWifiIP()));
+                  print(await (info.getWifiBSSID()));
+                  print(await (info.getWifiGatewayIP()));
+                  print(await (info.getWifiName()));
                 } catch (e) {
                   print(e);
                 }
