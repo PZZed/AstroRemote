@@ -15,20 +15,33 @@ class HomePage extends StatelessWidget {
     return Icon(Icons.close_rounded,color: Colors.red);
   }
 
-  SizedBox verticalSpace = SizedBox(height: 10);
+  SizedBox verticalSpace = SizedBox(height: 50);
   SizedBox horizontalSpace = SizedBox(width: 5);
 
   @override
   Widget build(BuildContext context) {
+
+    IconButton iconButton = IconButton(
+            icon: getActualStatus(),
+            onPressed: () {showDialog(
+                      context: context,
+                      builder: (context) {
+                        Future.delayed(Duration(milliseconds: 300), () {
+                          Navigator.of(context).pop(true);
+                        });
+                        return AlertDialog(
+                          alignment: Alignment.topCenter,
+                          title: Text("Connected" /* TODO : display a different message if not connected */),
+                        );
+                      });},
+        );
+
+
     return Scaffold(
-      
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Astronomande"),
-        actions: <Widget>[
-          IconButton(
-            icon: getActualStatus(),
-            onPressed: () {},
-        ) ]),
+        actions: <Widget>[iconButton]),
       body: Center(
           child: Column(
         children: [
@@ -55,8 +68,9 @@ class HomePage extends StatelessWidget {
           verticalSpace,
           CustomSwitchWidget("Suivi STD", false),
           verticalSpace,
-          CustomSwitchWidget("Retour", true),
-           verticalSpace,
+          CustomSwitchWidget("Retour", false),
+          verticalSpace,
+          verticalSpace,
           CustomSlider()
         ],
       )),

@@ -35,21 +35,23 @@ class _CustomSlider extends State<CustomSlider> {
     );
 
     TextFormField textInput = TextFormField( 
-            onChanged:(value){ setState(() {if(0 <= double.parse(value) && double.parse(value) <= maxValue){current_value = double.parse(value); }});}, // set a value between 0-1023
+            keyboardType: TextInputType.number,
+            onChanged:(value){ setState(() {if((value.isNotEmpty) && (0 <= double.parse(value) && double.parse(value) <= maxValue)){current_value = double.parse(value); }});}, // set a value between 0-1023
             controller: inputTextController, 
             decoration: InputDecoration( border: OutlineInputBorder(), hintText: current_value.round().toString()) );
 
     return Column( 
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(
+        Transform.scale(scale:1.5, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(
           width: 60,
           child: textInput),SizedBox(width: 5), 
           ElevatedButton(
-            onPressed: null /*TODO: call adapt speed service, if "suivi activated,else return null to desactivate button"*/,
-            child: Text("Adapt speed"),
-            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),)],)
+            onPressed :(){return null;} /*TODO: call adapt speed service, if "suivi activated,else return null to desactivate button"*/,
+            child: Text("Modifier vitesse"),
+            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),)],))
         ,
+        SizedBox(height: 20),
         slider
       ]);
       
