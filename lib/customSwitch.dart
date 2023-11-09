@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 
 class CustomSwitchWidget extends StatefulWidget {
-  
   String name;
   bool isActive;
+  void Function(bool) callback;
 
-  CustomSwitchWidget(this.name, this.isActive); //constructor
+  CustomSwitchWidget(this.name, this.isActive, this.callback); //constructor
 
   @override
-  _CustomSwitch createState() => _CustomSwitch(name, isActive, isActive);
+  _CustomSwitch createState() =>
+      _CustomSwitch(name, isActive, isActive, callback);
 }
 
 class _CustomSwitch extends State<CustomSwitchWidget> {
-
   String name;
   bool isActive;
   bool light;
+  final void Function(bool) callback;
+  _CustomSwitch(
+      this.name, this.isActive, this.light, this.callback); //constructor
 
-  _CustomSwitch(this.name, this.isActive, this.light); //constructor
-
-
-
- 
   @override
   Widget build(BuildContext context) {
     final MaterialStateProperty<Color?> trackColor =
@@ -50,19 +48,26 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
         return Colors.black;
       },
     );
-    return Transform.scale( scale: 2, child: Row(
-      mainAxisAlignment:MainAxisAlignment.center,
-      children: [
-        SizedBox(width: 100, child: Text(name)),
-        Switch(
-          // This bool value toggles the switch.
-          value: light,
-          overlayColor: overlayColor,
-          trackColor: trackColor,
-          thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
-          onChanged: !isActive ? null : (bool value) {setState(() {light = value; /*TODO : call switch service*/});},
-    ),
-    SizedBox(width: 5)]));
-    
+    return Transform.scale(
+        scale: 2,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          SizedBox(width: 100, child: Text(name)),
+          Switch(
+            // This bool value toggles the switch.
+            value: light,
+            overlayColor: overlayColor,
+            trackColor: trackColor,
+            thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
+            onChanged: !isActive
+                ? null
+                : (bool value) {
+                    callback(value);
+                    setState(() {
+                      light = value;
+                    });
+                  },
+          ),
+          const SizedBox(width: 5)
+        ]));
   }
 }
