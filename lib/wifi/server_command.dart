@@ -26,9 +26,7 @@ class ServerCommand {
   // Keep alive : should response pong
   // 5 second de timeout
   static Future<http.Response> keepAlive() {
-    return http
-        .get(Uri.parse(keepAliveUrl), headers: getHeaders())
-        .timeout(const Duration(seconds: 5));
+    return http.get(Uri.parse(keepAliveUrl), headers: getHeaders());
   }
 
   static Future<http.Response> connect() {
