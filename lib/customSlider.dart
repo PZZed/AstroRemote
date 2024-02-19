@@ -9,7 +9,8 @@ class CustomSlider extends StatefulWidget {
 
 class _CustomSlider extends State<CustomSlider> {
   //default value of the slider 
-  double current_value = 500;
+  int current_value = 500;
+
   //max value of the slider
   double maxValue = 1023;
 
@@ -26,19 +27,30 @@ class _CustomSlider extends State<CustomSlider> {
   @override
   Widget build(BuildContext context) {
 
+ TextFormField textInput = TextFormField( 
+            keyboardType: TextInputType.number,
+            onChanged:(value){ setState(() {
+              if((value.isNotEmpty) && (0 <= int.parse(value) && int.parse(value) <= maxValue))
+              {
+                current_value = int.parse(value); 
+              }});},
+              
+            // set a value between 0-1023
+            controller: inputTextController, 
+            decoration: InputDecoration( border: OutlineInputBorder(), hintText: current_value.round().toString()) );
+
     Slider slider = Slider(
           activeColor: Colors.redAccent[700],
           inactiveColor: Color.fromARGB(136, 156, 152, 152),
-          value: current_value,
+          value: current_value.toDouble(),
           max: maxValue,
-          onChanged: (double value) {setState(() { current_value = value; });}, //update slider value
+          onChanged: (double value) {setState(() { 
+            current_value = value.toInt();
+            inputTextController.text = value.round().toString();
+           });}, //update slider value
     );
 
-    TextFormField textInput = TextFormField( 
-            keyboardType: TextInputType.number,
-            onChanged:(value){ setState(() {if((value.isNotEmpty) && (0 <= double.parse(value) && double.parse(value) <= maxValue)){current_value = double.parse(value); }});}, // set a value between 0-1023
-            controller: inputTextController, 
-            decoration: InputDecoration( border: OutlineInputBorder(), hintText: current_value.round().toString()) );
+   
 
     return Column( 
       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class ServerCommand {
@@ -35,16 +33,31 @@ class ServerCommand {
 
   static Future<http.Response> retour(bool on) {
     String url = on ? retourOnUrl : retourOffUrl;
+    print(on ? "retour on" : "retour off");
+    if(on) {
+      suiviStd(false);
+      suivi(false);
+      }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 
   static Future<http.Response> suiviStd(bool on) {
     String url = on ? suiviStdOnUrl : suiviStdOffUrl;
+    print(on ? "std on" : "std off");
+    if(on) {
+      suivi(false);
+      retour(false);
+      }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 
   static Future<http.Response> suivi(bool on) {
     String url = on ? suiviOnUrl : suiviOffUrl;
+    print(on ? "suivi on" : "suivi off");
+    if(on) {
+      suiviStd(false);
+      retour(false);
+      }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 }

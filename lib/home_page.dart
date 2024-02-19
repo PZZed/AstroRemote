@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:astroremote/customSlider.dart';
 import 'package:astroremote/customSwitch.dart';
-import 'package:astroremote/remote_page.dart';
 import 'package:astroremote/wifi/server_command.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +12,7 @@ class HomePage extends StatefulWidget {
     return _HomePage();
   }
 }
+
 
 class _HomePage extends State<HomePage> {
   ServerCommand serverCommand = ServerCommand();
@@ -31,16 +30,17 @@ class _HomePage extends State<HomePage> {
     }
   }
 
-  SizedBox verticalSpace = const SizedBox(height: 50);
+  SizedBox verticalSpace = const SizedBox(height: 100);
   SizedBox horizontalSpace = const SizedBox(width: 5);
+
 
   void checkHealth(IconButton iconButton) async {
     try {
       await ServerCommand.keepAlive().then((value) => setState(() {
-            isConnected = true;
-            followActivated = true;
-            followStdActivated = true;
-            returnActivated = true;
+            isConnected = false;
+            followActivated = false;
+            followStdActivated = false;
+            returnActivated = false;
           }));
     } on Exception {
       setState(() {
@@ -55,7 +55,7 @@ class _HomePage extends State<HomePage> {
   Text connectedText() {
     return isConnected ? const Text("Connected") : const Text("Disconnected");
   }
-
+  
   @override
   Widget build(BuildContext context) {
     IconButton iconButton = IconButton(
@@ -83,15 +83,7 @@ class _HomePage extends State<HomePage> {
           child: Column(
         children: [
           verticalSpace,
-          CustomSwitchWidget(
-              "Suivi", followActivated, (value) => ServerCommand.suivi(value)),
-          verticalSpace,
-          CustomSwitchWidget("Suivi STD", followStdActivated,
-              (value) => ServerCommand.suiviStd(value)),
-          verticalSpace,
-          CustomSwitchWidget("Retour", returnActivated,
-              (value) => ServerCommand.retour(value)),
-          verticalSpace,
+          CustomSwitchWidget(),
           verticalSpace,
           const CustomSlider()
         ],
