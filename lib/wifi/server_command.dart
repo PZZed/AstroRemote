@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 class ServerCommand {
-  static const serverUrl = 'http://192.168.1.11:3000/astroremote/';
+  static const serverUrl = 'http://192.168.4.4:80/astroremote/';
 
   static const keepAliveUrl = '${serverUrl}keep_alive';
   static const connectUrl = '${serverUrl}connect';
@@ -24,7 +24,13 @@ class ServerCommand {
   // Keep alive : should response pong
   // 5 second de timeout
   static Future<http.Response> keepAlive() {
-    return http.get(Uri.parse(keepAliveUrl), headers: getHeaders());
+    try {
+      return http
+          .get(Uri.parse(keepAliveUrl), headers: getHeaders())
+          .onError((onError, err) => throw Exception());
+    } on Exception {
+      return Future.error(Exception('Not connected'));
+    }
   }
 
   static Future<http.Response> connect() {
@@ -34,30 +40,30 @@ class ServerCommand {
   static Future<http.Response> retour(bool on) {
     String url = on ? retourOnUrl : retourOffUrl;
     print(on ? "retour on" : "retour off");
-    if(on) {
+    if (on) {
       suiviStd(false);
       suivi(false);
-      }
+    }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 
   static Future<http.Response> suiviStd(bool on) {
     String url = on ? suiviStdOnUrl : suiviStdOffUrl;
     print(on ? "std on" : "std off");
-    if(on) {
+    if (on) {
       suivi(false);
       retour(false);
-      }
+    }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 
   static Future<http.Response> suivi(bool on) {
     String url = on ? suiviOnUrl : suiviOffUrl;
     print(on ? "suivi on" : "suivi off");
-    if(on) {
+    if (on) {
       suiviStd(false);
       retour(false);
-      }
+    }
     return http.get(Uri.parse(url), headers: getHeaders());
   }
 }
