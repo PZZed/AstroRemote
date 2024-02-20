@@ -1,120 +1,130 @@
-import 'package:astroremote/remote_page.dart';
+import 'dart:async';
+import 'package:astroremote/customSlider.dart';
+import 'package:astroremote/customSwitch.dart';
+import 'package:astroremote/wifi/server_command.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
-  // final info = NetworkInfo();
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
+  State<StatefulWidget> createState() {
+    return _HomePage();
+  }
+}
+
+class _HomePage extends State<HomePage> {
+
+  ///Classe qui gère les appels au serveur
+  ServerCommand serverCommand = ServerCommand();
+
+  ///Est ce que l'application est connectée au serveur ?
+  bool isConnected = false;
+
+  ///Affiche un texte lorsque l'on clique sur l'icône de connexion
+  Text connectedText() {
+    return isConnected ? const Text("Connected") : const Text("Disconnected");
+  }
+
+  ///Composants génériques pour créer des espaces sur la page 
+  SizedBox verticalSpace = const SizedBox(height: 100);
+
+  ///Icône qui indique si l'application est connectée au serveur
+  Icon  icon = const Icon(Icons.close_rounded, color: Colors.red);
+
+  ///Modifie l'icone de connexion en fonction de l'état de la conenexion au serveur
+  void setConnexionIcon() {
+    if (isConnected) {
+      icon = const Icon(Icons.check_circle_rounded, color: Colors.green);
+    } else {
+      icon = const Icon(Icons.close_rounded, color: Colors.red);
+    }
+  }
+
+  _HomePage() {
+    timer(iconButton);
+  }
+
+///Appelle le serveur pour vérifier qu'on est toujours connecté
+  Future<void> checkHealth(IconButton iconButton) async {
+    try {
+      return ServerCommand.keepAlive()
+          .then((value) => setState(() {
+                isConnected = true;
+                setConnexionIcon();
+              }))
+          .catchError((err) => {
+                setState(() {
+                  isConnected = false;
+                  setConnexionIcon();
+                })
+              });
+    } on Exception {
+      setState(() {
+        isConnected = false;
+        setConnexionIcon();
+      });
+    }
+  }
+
+///Envoie une requête au serveur périodiquement
+  Future<void> timer(IconButton iconButton) async {
+    print(DateTime.now());
+    try {
+      await checkHealth(iconButton);
+    } on Exception {
+      setState(() {
+        isConnected = false;
+        setConnexionIcon();
+      });
+    }
+    await Future.delayed(const Duration(seconds: 5), () async {
+      timer(iconButton);
+    });
+    return;
+  }
+
+  IconButton iconButton = const IconButton(
+    icon: Icon(Icons.close_rounded, color: Colors.red),
+    onPressed: null,
+  );
+
+  ///Création du corp de l'application
+  @override
   Widget build(BuildContext context) {
+    
+    iconButton = IconButton(
+      icon: icon,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(milliseconds: 300), () { Navigator.of(context).pop(true); });
+            return AlertDialog(alignment: Alignment.topCenter, title: connectedText());
+          },
+        );
+      }
+    );
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      ///Barre supériure de l'application
       appBar: AppBar(
-        title: const Text("Accueil"),
-      ),
+          title: const Text("Tablette équatoriale - Remote"), actions: <Widget>[iconButton]),
+      ///Corp de l'application
       body: Center(
-          child: Column(
+        child: Column(
         children: [
-          TextButton(
-              onPressed: () async {
-                try {
-                  //  final wifiIP = await info.getWifiGatewayIP();
-                  //  print(wifiIP.toString());
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: Text("Liste des ips")),
-          TextButton(
-            child: const Text("Se connecter"),
-            onPressed: () {
-              // Naviguer vers la page 2
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RemotePage()));
-            },
-          ),
-          CustomSwitchWidget(),
-          CustomSwitchWidget(),
-          CustomSwitchWidget(),
-          CustomSlider()
+          verticalSpace,
+          CustomSwitchWidget(),     //boutons Switchs (Suivi/SuiviSTD/Retour)
+          verticalSpace,
+          const CustomSlider()      //Réglage de la vitesse
         ],
       )),
     );
   }
 }
 
-/// custom, switch code
-class CustomSwitchWidget extends StatefulWidget {
-  @override
-  _FirstCustomSwitxhWidget createState() => _FirstCustomSwitxhWidget();
-}
 
-class _FirstCustomSwitxhWidget extends State<CustomSwitchWidget> {
-  bool light = true;
-  @override
-  Widget build(BuildContext context) {
-    final MaterialStateProperty<Color?> trackColor =
-        MaterialStateProperty.resolveWith<Color?>(
-      (Set<MaterialState> states) {
-        // Track color when the switch is selected.
-        if (states.contains(MaterialState.selected)) {
-          return Colors.redAccent[700];
-        }
-        // Otherwise return null to set default track color
-        // for remaining states such as when the switch is
-        // hovered, focused, or disabled.
-        return null;
-      },
-    );
-    final MaterialStateProperty<Color?> overlayColor =
-        MaterialStateProperty.resolveWith<Color?>(
-      (Set<MaterialState> states) {
-        // Material color when switch is selected.
-        if (states.contains(MaterialState.selected)) {
-          return Colors.redAccent[700];
-        }
-        // Material color when switch is disabled.
-        if (states.contains(MaterialState.disabled)) {
-          return Colors.black;
-        }
-        // Otherwise return null to set default material color
-        // for remaining states such as when the switch is
-        // hovered, or focused.
-        return null;
-      },
-    );
 
-    return Switch(
-      // This bool value toggles the switch.
-      value: light,
-      overlayColor: overlayColor,
-      trackColor: trackColor,
-      thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
-      onChanged: (bool value) {
-        // This is called when the user toggles the switch.
-        setState(() {
-          light = value;
-        });
-      },
-    );
-  }
-}
 
-/// custom slider code
-class CustomSlider extends StatefulWidget {
-  const CustomSlider({super.key});
-
-  @override
-  _CustomSlider createState() => _CustomSlider();
-}
-
-class _CustomSlider extends State<CustomSlider> {
-  @override
-  Widget build(BuildContext context) {
-    return Slider(
-      activeColor: Colors.redAccent[700],
-      inactiveColor: Colors.redAccent[300],
-      value: 0,
-      onChanged: (double value) {},
-    );
-  }
-}
