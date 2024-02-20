@@ -9,10 +9,12 @@ class CustomSwitchWidget extends StatefulWidget {
 }
 
 class _CustomSwitch extends State<CustomSwitchWidget> {
+  /// indique pour chaque switch si il est activé
   bool isSuiviOn = false;
   bool isSuiviSTDOn = false;
   bool isRetourOn = false;
 
+  /// en fonction du switch activé, désactive les autres 
   void _updateSwitch(int switchNumber) {
     setState(() {
       switch (switchNumber) {
@@ -35,6 +37,8 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
     });
   }
 
+  /// Couleurs du switch 
+
   MaterialStateProperty<Color?> GetTrackColor(bool isOn)
   {
     return MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) 
@@ -48,6 +52,9 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
      {return isActive ?  Colors.redAccent[700] : Colors.black;});
    }
 
+
+/// Création des switch 
+
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
@@ -56,14 +63,13 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
           Row(mainAxisAlignment: MainAxisAlignment.center,children: [
           const SizedBox(width: 100, child: Text("Suivi")),
           Switch(
-            // This bool value toggles the switch.
-            value: isSuiviOn,
+            value: isSuiviOn,                      // on/off
             overlayColor: GetOverlayColor(isSuiviOn),
             trackColor: GetTrackColor(isSuiviOn),
             thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
             onChanged: (bool value) {
-                  _updateSwitch(1);
-                    ServerCommand.suivi(value);
+                  _updateSwitch(1);               // met a jour les autres switchs
+                    ServerCommand.suivi(value);   //Appel serveur
                     setState(() {
                       isSuiviOn = value;
                     });
@@ -72,14 +78,13 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
           Row(mainAxisAlignment: MainAxisAlignment.center,children: [
           const SizedBox(width: 100, child: Text("Suivi STD")),
           Switch(
-            // This bool value toggles the switch.
-            value: isSuiviSTDOn,
+            value: isSuiviSTDOn,                      // on/off
             overlayColor: GetOverlayColor(isSuiviSTDOn),
             trackColor: GetTrackColor(isSuiviSTDOn),
             thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
             onChanged: (bool value) {
-                  _updateSwitch(2);
-                    ServerCommand.suiviStd(value);
+                  _updateSwitch(2);                   // met a jour les autres switchs
+                    ServerCommand.suiviStd(value);    //Appel serveur
                     setState(() {
                       isSuiviSTDOn = value;
                     });
@@ -88,14 +93,13 @@ class _CustomSwitch extends State<CustomSwitchWidget> {
           Row(mainAxisAlignment: MainAxisAlignment.center,children: [
           const SizedBox(width: 100, child: Text("Retour")),
           Switch(
-            // This bool value toggles the switch.
-            value: isRetourOn,
+            value: isRetourOn,                      // on/off
             overlayColor: GetOverlayColor(isRetourOn),
             trackColor: GetTrackColor(isRetourOn),
             thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
             onChanged:(bool value) {
-                  _updateSwitch(3);
-                    ServerCommand.retour(value);
+                  _updateSwitch(3);                 // met a jour les autres switchs
+                    ServerCommand.retour(value);    //Appel serveur
                     setState(() {
                       isRetourOn = value;
                     });

@@ -8,25 +8,24 @@ class CustomSlider extends StatefulWidget {
 }
 
 class _CustomSlider extends State<CustomSlider> {
-  //default value of the slider 
+  ///Valeur par défaut du slider
   int current_value = 500;
 
-  //max value of the slider
+  ///Valeur max du slider
   double maxValue = 1023;
 
-  //text controller -> update slider value when a value is submitted
+  /// Affiche la valeur du slider
   final inputTextController = TextEditingController();
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     inputTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
+  /// Affiche la valeur de la vitesse
  TextFormField textInput = TextFormField( 
             keyboardType: TextInputType.number,
             onChanged:(value){ setState(() {
@@ -34,8 +33,6 @@ class _CustomSlider extends State<CustomSlider> {
               {
                 current_value = int.parse(value); 
               }});},
-              
-            // set a value between 0-1023
             controller: inputTextController, 
             decoration: InputDecoration( border: OutlineInputBorder(), hintText: current_value.round().toString()) );
 
@@ -47,23 +44,30 @@ class _CustomSlider extends State<CustomSlider> {
           onChanged: (double value) {setState(() { 
             current_value = value.toInt();
             inputTextController.text = value.round().toString();
-           });}, //update slider value
+           });},
     );
 
    
-
+    /// Création du composant Texte + Slider
     return Column( 
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Transform.scale(scale:1.5, child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(
-          width: 60,
-          child: textInput),SizedBox(width: 5), 
-          ElevatedButton(
-            onPressed :(){return null;} /*TODO: call adapt speed service, if "suivi activated,else return null to desactivate button"*/,
-            child: Text("Modifier vitesse"),
-            style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),)],))
-        ,
-        SizedBox(height: 20),
+        Transform.scale(
+          scale:1.5, 
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(width: 60,child: textInput),
+            const SizedBox(width: 5), 
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.redAccent.shade700),
+              onPressed :(){return null;} /*TODO: call adapt speed service, if "suivi activated,else return null to desactivate button"*/,
+              child: const Text("Modifier vitesse"),
+            )
+          ],
+          )
+        ),
+        const SizedBox(height: 20),
         slider
       ]);
       

@@ -14,15 +14,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+
+  ///Classe qui gère les appels au serveur
   ServerCommand serverCommand = ServerCommand();
+
+  ///Est ce que l'application est connectée au serveur ?
   bool isConnected = false;
 
-  bool followActivated = true;
-  bool followStdActivated = true;
-  bool returnActivated = true;
-  // final info = NetworkInfo();
-  var icon = const Icon(Icons.close_rounded, color: Colors.red);
-  void getActualStatus() {
+  ///Affiche un texte lorsque l'on clique sur l'icône de connexion
+  Text connectedText() {
+    return isConnected ? const Text("Connected") : const Text("Disconnected");
+  }
+
+  ///Composants génériques pour créer des espaces sur la page 
+  SizedBox verticalSpace = const SizedBox(height: 100);
+
+  ///Icône qui indique si l'application est connectée au serveur
+  Icon  icon = const Icon(Icons.close_rounded, color: Colors.red);
+
+  ///Modifie l'icone de connexion en fonction de l'état de la conenexion au serveur
+  void setConnexionIcon() {
     if (isConnected) {
       icon = const Icon(Icons.check_circle_rounded, color: Colors.green);
     } else {
@@ -33,53 +44,38 @@ class _HomePage extends State<HomePage> {
   _HomePage() {
     timer(iconButton);
   }
-  SizedBox verticalSpace = const SizedBox(height: 100);
-  SizedBox horizontalSpace = const SizedBox(width: 5);
 
+///Appelle le serveur pour vérifier qu'on est toujours connecté
   Future<void> checkHealth(IconButton iconButton) async {
     try {
       return ServerCommand.keepAlive()
           .then((value) => setState(() {
                 isConnected = true;
-                followActivated = false;
-                followStdActivated = false;
-                returnActivated = false;
-                getActualStatus();
+                setConnexionIcon();
               }))
           .catchError((err) => {
                 setState(() {
-                  followActivated = false;
-                  followStdActivated = false;
-                  returnActivated = false;
                   isConnected = false;
-                  getActualStatus();
+                  setConnexionIcon();
                 })
               });
     } on Exception {
       setState(() {
-        followActivated = false;
-        followStdActivated = false;
-        returnActivated = false;
         isConnected = false;
+        setConnexionIcon();
       });
     }
   }
 
-  Text connectedText() {
-    return isConnected ? const Text("Connected") : const Text("Disconnected");
-  }
-
+///Envoie une requête au serveur périodiquement
   Future<void> timer(IconButton iconButton) async {
     print(DateTime.now());
     try {
       await checkHealth(iconButton);
     } on Exception {
       setState(() {
-        followActivated = false;
-        followStdActivated = false;
-        returnActivated = false;
         isConnected = false;
-        getActualStatus();
+        setConnexionIcon();
       });
     }
     await Future.delayed(const Duration(seconds: 5), () async {
@@ -92,41 +88,42 @@ class _HomePage extends State<HomePage> {
     icon: Icon(Icons.close_rounded, color: Colors.red),
     onPressed: null,
   );
+
+  ///Création du corp de l'application
   @override
   Widget build(BuildContext context) {
+    
     iconButton = IconButton(
-        icon: icon,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              Future.delayed(const Duration(milliseconds: 300), () {
-                Navigator.of(context).pop(true);
-              });
-              return AlertDialog(
-                  alignment: Alignment.topCenter, title: connectedText());
-            },
-          );
-        });
+      icon: icon,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(milliseconds: 300), () { Navigator.of(context).pop(true); });
+            return AlertDialog(alignment: Alignment.topCenter, title: connectedText());
+          },
+        );
+      }
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      ///Barre supériure de l'application
       appBar: AppBar(
-          title: const Text("Astronomande"), actions: <Widget>[iconButton]),
+          title: const Text("Tablette équatoriale - Remote"), actions: <Widget>[iconButton]),
+      ///Corp de l'application
       body: Center(
-          child: Column(
+        child: Column(
         children: [
           verticalSpace,
-          CustomSwitchWidget(),
+          CustomSwitchWidget(),     //boutons Switchs (Suivi/SuiviSTD/Retour)
           verticalSpace,
-          const CustomSlider()
+          const CustomSlider()      //Réglage de la vitesse
         ],
       )),
     );
   }
 }
-
-/// custom, switch code
 
 
 
