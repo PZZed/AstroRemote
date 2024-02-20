@@ -1,8 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'dart:io' as io;
 
 class ServerCommand {
-  static const serverUrl = 'http://192.168.1.11:3000/astroremote/';
+  static const serverUrl = 'http://192.168.4.4:80/astroremote/';
 
   static const keepAliveUrl = '${serverUrl}keep_alive';
   static const connectUrl = '${serverUrl}connect';
@@ -17,8 +16,6 @@ class ServerCommand {
   static const suiviStdOffUrl = '${serverUrl}bp_suivi_std/off';
 
   static const speedUrl = '${serverUrl}set_speed';
-
-  static const httpClient = io.HttpClient;
 
   static getHeaders() {
     return <String, String>{'Content-Type': 'application/json; charset=UTF-8'};
